@@ -27,7 +27,7 @@ In this particular script sheet 5 and sheet 6 are going to be used:
 
 
 <center>
-   ![](images/first.png)
+   ![](https://github.com/ThiagoAndo/Tidying-and-Reshaping/blob/main/Images/first.png)
 </center>
 
 The image is the screenshot of sheet 5. Sheet 5 and 6 are identical in the arrangement.
@@ -40,7 +40,7 @@ Australian Marriage Law Postal Survey 2017 - Response contains information on re
 In this analysis sheet, 3 of the data will be used from the Australian Marriage Law Postal Survey 2017 - Response the sheet contains responses of eligible participants and also contains info on non-responding participant and unclear responses over different federal divisions
 
 <center>
-   ![](images/second.png)
+   ![](https://github.com/ThiagoAndo/Tidying-and-Reshaping/blob/main/Images/second.png)
 </center>
  </br> </br>
 
@@ -67,14 +67,14 @@ To tidy these data a good portion of the gamut of tidyverse techniques will be u
 
 ### Australian Marriage Law Postal Survey 2017 - Participation
 <center>
-   ![](images/first_01.png)
+   ![](https://github.com/ThiagoAndo/Tidying-and-Reshaping/blob/main/Images/first_01.PNG)
 </center>
  </br> </br>
 
 
 ### Australian Marriage Law Postal Survey 2017 - Response
 <center>
-   ![](images/second_02.png)
+   ![](https://github.com/ThiagoAndo/Tidying-and-Reshaping/blob/main/Images/second_02.PNG)
 </center>
 
 
