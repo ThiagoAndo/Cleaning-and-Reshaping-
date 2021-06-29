@@ -1,5 +1,5 @@
 # Tidying & Reshaping
- </br> </br>
+
 
 ![](images/03.01_junior_tame_v_tidy.png)
 
@@ -80,4 +80,4 @@ To tidy these data a good portion of the gamut of tidyverse techniques will be u
 
 
 
-
+You can find the detailed script in markdown format in the [RPubs](https://rpubs.com/AndoFreitas)
