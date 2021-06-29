@@ -1,7 +1,7 @@
 # Tidying & Reshaping
 
 
-![](https://github.com/ThiagoAndo/Tidying-and-Reshaping/blob/main/Images/03.01_junior_tame_v_tidy.png)
+![](Images/03.01_junior_tame_v_tidy.png)
 
 
 
@@ -26,9 +26,7 @@ In this particular script sheet 5 and sheet 6 are going to be used:
 
 
 
-<center>
-   ![](https://github.com/ThiagoAndo/Tidying-and-Reshaping/blob/main/Images/first.png)
-</center>
+   ![](Images/first.png)
 
 The image is the screenshot of sheet 5. Sheet 5 and 6 are identical in the arrangement.
 </br>
@@ -39,9 +37,8 @@ Australian Marriage Law Postal Survey 2017 - Response contains information on re
 
 In this analysis sheet, 3 of the data will be used from the Australian Marriage Law Postal Survey 2017 - Response the sheet contains responses of eligible participants and also contains info on non-responding participant and unclear responses over different federal divisions
 
-<center>
-   ![](https://github.com/ThiagoAndo/Tidying-and-Reshaping/blob/main/Images/second.png)
-</center>
+   ![](Images/second.png)
+
  </br> </br>
 
 # Tidying Data
@@ -66,16 +63,14 @@ To tidy these data a good portion of the gamut of tidyverse techniques will be u
 
 
 ### Australian Marriage Law Postal Survey 2017 - Participation
-<center>
-   ![](https://github.com/ThiagoAndo/Tidying-and-Reshaping/blob/main/Images/first_01.PNG)
-</center>
+
+   ![](Images/first_01.PNG)
  </br> </br>
 
 
 ### Australian Marriage Law Postal Survey 2017 - Response
-<center>
-   ![](https://github.com/ThiagoAndo/Tidying-and-Reshaping/blob/main/Images/second_02.PNG)
-</center>
+
+   ![](Images/second_02.PNG)
 
 
 
