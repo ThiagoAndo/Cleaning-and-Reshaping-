@@ -1,7 +1,7 @@
 # Tidying & Reshaping
 
 
-![](images/03.01_junior_tame_v_tidy.png)
+![](https://github.com/ThiagoAndo/Tidying-and-Reshaping/blob/main/Images/03.01_junior_tame_v_tidy.png)
 
 
 
