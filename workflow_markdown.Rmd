@@ -1,0 +1,321 @@
+---
+title: "Tidying & Reshaping"
+author: "Thiago Ando de Freitas"
+date: " Last edited `r format(Sys.Date(), '%d %B, %Y')`"
+output: 
+ html_document:
+    css: "style.css" 
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+      toc_depth: 1
+---
+
+
+
+<center>
+![cost-of-health](images/03.01_junior_tame_v_tidy.png)
+</center>
+
+
+
+
+# Data describe all columns
+The data was taken from  [Australian Marriage](https://www.abs.gov.au/AUSSTATS/abs@.nsf/DetailsPage/1800.02017?OpenDocument)
+ Law Postal Survey, 2017. 
+
+Australian Marriage Law Postal Survey, 2017 was conducted by the Australian Bureau of Statistics. This survey tries to find out people’s views on legalizing same-sex marriage in Australia.
+
+Two excel sheets are being used in the coming tasks:
+
+
+### 1. Australian Marriage Law Postal Survey 2017 - Participation
+
+Australian Marriage Law Postal Survey 2017 - Participation contains information on participants, Distributed over different age bands. A further division by (State/federal division) and gender(male/female)are provided in different sheets.
+
+In this particular script sheet 5 and sheet 6 are going to be used: 
+
+* sheet 5 contains male participants distributed over different age bands (RHS) and federal division(LHS).
+
+* sheet 6 contains female participants distributed over different age bands and federal divisions.
+
+
+
+<center>
+   ![cost-of-health](images/first.png)
+</center>
+
+The image is the screenshot of sheet 5. Sheet 5 and 6 are identical in the arrangement.
+</br></br>
+
+### 2. Australian Marriage Law Postal Survey 2017 - Response
+
+Australian Marriage Law Postal Survey 2017 - Response contains information on responses of various participants of the study.
+
+In this analysis sheet, 3 of the data will be used from the Australian Marriage Law Postal Survey 2017 - Response the sheet contains responses of eligible participants and also contains info on non-responding participant and unclear responses over different federal divisions
+
+<center>
+   ![cost-of-health](images/second.png)
+</center>
+
+
+# Tidying Data
+
+The data is not in tidy format. Reason: In Australian Marriage Law Postal Survey 2017 - Participation,
+the clumms age brackets are distributed over columns that directly violate tidy data rules. To make data a tidy df, a gather operation is to be performed to create a column with age brackets as different levels of columns.
+
+You can understand better about tidy data rules [here.](https://vita.had.co.nz/papers/tidy-data.pdf) 
+
+To tidy these data a good portion of the gamut of tidyverse techniques will be used.
+
+ * Read Excel files using `XLConnect`
+ * Dropping rows and reshaping data with `tidyr` 
+ * Filtering,and mutating with `dplyr`
+ * Cleaning column names with `janitor`
+ * Manipulating strings with `stringr` and `rebus`
+ </br>
+ 
+
+```{r, warning= FALSE, message= FALSE}
+suppressMessages(library(XLConnect)) # dloading data
+suppressMessages(library(stringr))   # string manipulation
+suppressMessages(library(dplyr))     # data manipulation
+suppressMessages(library(janitor))   # data manipulation
+suppressMessages(library(tidyr))     # data manipulation
+suppressMessages(library(rebus))     # string manipulation
+
+
+files <- dir("Dirty_data", full = T)
+
+
+if(length(files)==0 ){
+warning("FIRST YOU MUST CREATE A NEW R PROJEC THEN COPY THE FILES DOWNLOADED FROM GIT HUB 
+        AND PASTE ALL INTO THE NEW PROJECT FOLDER") }
+
+my_book <- loadWorkbook(files[1])
+
+book    <- loadWorkbook(files[2])
+```
+</br>
+
+
+
+
+```{r} 
+
+readingFiles <- function(sex, col_num, col_nam, sheet_num){
+   colnames  <- readWorksheet(my_book, sheet=5, endRow =16)
+   colnames  <- unlist( colnames[5,] )
+   names(colnames)  <- NULL
+   no        <-  readWorksheet(my_book, sheet=4, startRow =6 , startCol = 18, endCol = 18)
+   gen       <-  readWorksheet(my_book, sheet=sheet_num, startRow =6)
+   if(sex == "male"){gen <-  cbind(gen, no)}
+   colnames[col_num] <- col_nam
+   names(gen)        <- colnames
+   
+   return(gen)
+}
+
+transfom <- function(bit, div){
+   
+}
+
+```
+</br>
+
+
+```{r}
+
+firstStep <- function(bit, div, type){
+   
+   if(type == "suv"){
+      bit <- bit %>%
+         select( - names(bit[,18, drop = F]))%>%
+         filter(!is.na(label))%>%
+         fill(state)%>%
+         mutate(division = as.factor(div))
+      
+   }else if(type == "resp"){
+      bit <- bit %>%
+         mutate(division = as.factor(div),
+                region = str_remove(region, char_class("(")%R%WRD%R%char_class(")")))%>%
+         select(division, everything() )}
+   
+   return(bit)
+   
+}
+```
+</br>
+
+
+
+
+
+```{r}
+secondStep <- function(data, type, num, place){
+   start            <- str_which(data[,place], fixed("Divisions")) 
+   Division         <-  str_remove(data[start,place], " Divisions")
+   New_South_Wales  <- firstStep( data[(start[1]+1) : (start[2]-num[1]),] , Division[1],type)
+   Victoria         <- firstStep( data[(start[2]+1) : (start[3]-num[1]),] , Division[2],type)
+   Queensland       <- firstStep( data[(start[3]+1) : (start[4]-num[1]),] , Division[3],type)
+   South            <- firstStep( data[(start[4]+1) : (start[5]-num[1]),] , Division[4],type)
+   Western          <- firstStep( data[(start[5]+1) : (start[6]-num[1]),] , Division[5],type)
+   Tasmania         <- firstStep( data[(start[6]+1) : (start[7]-num[1]),] , Division[6],type)
+   Northern         <- firstStep( data[(start[7]+1) : (start[8]-num[1]),] , Division[7],type)
+   Capital          <- firstStep( data[(start[8]+1) : num[2],] , Division[8],type)
+   
+   full <- rbind(New_South_Wales, Victoria, Queensland, South, Western, Tasmania, Northern,
+                 Capital)
+   return(full)
+}
+```
+</br>
+
+
+
+
+```{r}
+thirdStep <- function(full,sex,fitu){
+   
+   full <- full %>%
+      gather("years", "participants",- fitu)%>%
+      select(c(fitu, division, years, participants))%>%
+      mutate(years = as.factor(str_trim(str_remove(years, fixed("years")))),
+             years = recode(years, "85  and over" = "85-over"),
+             state = str_remove(state, char_class("(")%R%WRD%R%char_class(")")))%>%
+      clean_names()
+   
+   if(sex == "male"){ 
+      tidy <- full %>%
+         select( - no_gender) %>%
+         mutate(sex = factor(sex)) %>%
+         rename(measure = label,
+                count = participants)%>%
+         clean_names()
+      
+      
+      no_gender <- full %>%
+         select( - participants) %>% 
+         filter(years == "18-19")%>%
+         mutate(years = NA, sex = NA)%>%
+         rename(measure = label,
+                count = no_gender)%>%
+         clean_names()
+      
+      tidy <- bind_rows(tidy,no_gender)
+   }else{ 
+      
+      tidy <- full %>% 
+         mutate(sex = factor(sex)) %>%
+         rename(measure = label,
+                count = participants)%>%
+         clean_names()
+   } 
+      
+      tidy <- tidy %>%
+         mutate (measure = ifelse(measure == "Participation rate (%)",
+                                  "rate percent", measure))%>%
+         mutate_if(is.character,as.factor)%>%
+         select (division, state, years, sex, measure,count ) %>%
+         arrange(years)
+   
+   return(tidy) 
+}
+
+```
+</br>
+
+
+
+# Tidied DataSets
+
+
+### Australian Marriage Law Postal Survey 2017 - Participation
+
+```{r, warning= FALSE, message= FALSE}
+
+data       <- readingFiles("male",c(1,2,19),c("state", "label","no_gender"),5)
+full       <-  secondStep(data,"suv",c(6,636),"state")
+tidy_male  <-  thirdStep(full,"male",c("state", "label", "no_gender", "division"))
+```
+</br>
+
+
+```{r}
+
+data            <- readingFiles("female",c(1,2,18),c("state", "label","Total Females(b)"),6)
+full            <-  secondStep(data,"suv",c(6,636),"state") 
+tidy_female     <-  thirdStep(full,"female",c("state", "label", "division"))
+Participation_final <- rbind(tidy_male,tidy_female)
+
+```
+</br>
+
+
+```{r}
+str(Participation_final)
+```
+</br>
+```{r}
+head(Participation_final,10)
+```
+</br>
+```{r}
+tail(Participation_final,10)
+```
+</br>
+
+
+
+
+### Australian Marriage Law Postal Survey 2017 - Response
+
+
+```{r}
+bind <- function(sheet_num,col_num, col_name){
+   response <- readWorksheet(book,sheet=3,startRow =7,startCol=sheet_num[1],endCol                                         =sheet_num[2])
+   response[,col_num]<- NULL
+   names(response) <- col_name
+   return(response)
+}
+```
+</br>
+
+```{r}
+response_clear     <- bind(c(1,6),c(3,5,6),c("region", "yes", "no"))
+
+response_not_clear <- bind(c(11,13),2 ,c("not_clear", "non_responding"))
+
+all_data           <-  cbind(response_clear,response_not_clear)
+```
+</br>
+
+```{r}
+full <- secondStep(all_data,"resp",c(3,172),"region")
+
+response_final <- full %>%
+                  gather(vote, count ,-division,-region)%>%
+                  mutate_if(is.character,as.factor)%>%
+                  arrange(region)
+```
+</br>
+
+
+
+```{r}
+str(response_final)
+```
+</br>
+
+```{r}
+head(response_final,10)
+```
+</br>
+
+```{r}
+tail(response_final,10)
+```
+</br>
+
+You can find the code used in this article in the [Github Repository](https://github.com/ThiagoAndo/Tidying-and-Reshaping). **Right-click on the link and choose (open in a New Window).**
