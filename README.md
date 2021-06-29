@@ -5,7 +5,6 @@
 
 
 
-
 # Data describe all columns
 The data was taken from  [Australian Marriage](https://www.abs.gov.au/AUSSTATS/abs@.nsf/DetailsPage/1800.02017?OpenDocument)
  Law Postal Survey, 2017. 
@@ -32,7 +31,7 @@ In this particular script sheet 5 and sheet 6 are going to be used:
 </center>
 
 The image is the screenshot of sheet 5. Sheet 5 and 6 are identical in the arrangement.
-</br></br>
+</br>
 
 ### 2. Australian Marriage Law Postal Survey 2017 - Response
 
